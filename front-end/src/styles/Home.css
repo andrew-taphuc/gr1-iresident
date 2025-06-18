@@ -1,0 +1,202 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+}
+
+.home-container {
+  background: #fff;
+  min-height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.home-body {
+  display: flex;
+  min-height: calc(100vh - 65px - 90px); /* Trừ chiều cao header (65px) và navbar (90px) */
+}
+
+.home-content {
+  flex-grow: 1;
+  background-color: #fff;
+  padding: 32px 24px 24px 24px;
+  transition: margin-left 0.3s ease;
+  overflow-x: hidden;
+  margin-top: 65px;    /* Đẩy xuống dưới Header */
+  margin-bottom: -120px; /* Để trên Navbar */
+}
+
+.home-content h1 {
+  font-size: 3rem;
+  color: #102eb4;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Khi sidebar mở */
+.home-content.sidebar-open {
+  margin-left: 220px; /* width của sidebar khi open */
+}
+
+/* Khi sidebar đóng */
+.home-content.sidebar-closed {
+  margin-left: 60px; /* width của sidebar khi closed */
+}
+
+/* -------- Dashboard layout -------- */
+.dashboard {
+  padding: 20px;
+}
+
+.dashboard-top {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.dashboard-bottom {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+/* Card cơ bản */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 2px solid #d2e3fc;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #1a73e8;
+}
+
+/* Kích thước khối */
+.small-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.large-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 2px solid #d2e3fc;
+  margin-top: 20px;
+}
+
+.large-card:hover {
+  border-color: #1a73e8;
+}
+
+.card-title {
+  font-size: 15px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-title strong {
+  color: #333;
+  font-weight: 500;
+}
+
+/* Style cho biểu đồ */
+.recharts-wrapper {
+  margin: 0 auto;
+}
+
+.recharts-legend-item-text {
+  color: #333 !important;
+  font-size: 18px !important;
+}
+
+.recharts-tooltip-label {
+  color: #1a73e8 !important;
+  font-weight: 500 !important;
+  font-size: 18px !important;
+}
+
+.recharts-tooltip-item {
+  color: #333 !important;
+  font-size: 17px !important;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .dashboard-top {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-top {
+    grid-template-columns: 1fr;
+  }
+  
+  .card {
+    padding: 16px;
+  }
+  
+  .card-title {
+    font-size: 17px;
+  }
+  
+  .card-title strong {
+    font-size: 20px;
+  }
+  
+  .home-content h1 {
+    font-size: 2.5rem;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
