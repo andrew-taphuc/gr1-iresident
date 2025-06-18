@@ -1,0 +1,1 @@
+Phần mềm quản lý chung cư iResident theo kiến trúc multi-tenant
