@@ -1,13 +1,16 @@
-import * as residentServices from '../services/ResidentServices.js';
+import * as residentServices from "../services/ResidentServices.js";
 //import Resident from '../models/Resident.js';
 
 // Lấy tất cả cư dân
 export const getAllResidents = async (req, res) => {
   try {
-    const residents = await residentServices.getAllResidents();
+    const { apartmentId } = req.query;
+    const residents = await residentServices.getAllResidents(apartmentId);
     res.status(200).json({ error: false, residents });
   } catch (error) {
-    res.status(500).json({ error: true, message: 'Error retrieving residents', error });
+    res
+      .status(500)
+      .json({ error: true, message: "Error retrieving residents", error });
   }
 };
 
@@ -15,10 +18,15 @@ export const getAllResidents = async (req, res) => {
 export const getResidentById = async (req, res) => {
   try {
     const resident = await residentServices.getResidentById(req.params.id);
-    if (!resident) return res.status(404).json({ error: true, message: 'Resident not found' });
+    if (!resident)
+      return res
+        .status(404)
+        .json({ error: true, message: "Resident not found" });
     res.status(200).json({ error: false, resident });
   } catch (error) {
-    res.status(500).json({ error: true, message: 'Error retrieving resident', error });
+    res
+      .status(500)
+      .json({ error: true, message: "Error retrieving resident", error });
   }
 };
 
@@ -30,10 +38,10 @@ export const createResident = async (req, res) => {
     // Kiểm tra các trường bắt buộc theo model
     if (!HouseholdID || !FullName || !Sex || !Relationship) {
       return res.status(400).json({
-        message: "HouseholdID, FullName, Sex và Relationship là bắt buộc."
+        message: "HouseholdID, FullName, Sex và Relationship là bắt buộc.",
       });
     }
-    
+
     const newResident = await residentServices.createResident(req.body);
 
     return res.status(201).json(newResident);
@@ -41,7 +49,7 @@ export const createResident = async (req, res) => {
     console.error("Error creating resident:", error);
     return res.status(500).json({
       message: "Lỗi khi tạo cư dân",
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -49,11 +57,19 @@ export const createResident = async (req, res) => {
 // Cập nhật cư dân
 export const updateResident = async (req, res) => {
   try {
-    const updated = await residentServices.updateResident(req.params.id, req.body);
-    if (!updated) return res.status(404).json({ error: true, message: 'Resident not found' });
+    const updated = await residentServices.updateResident(
+      req.params.id,
+      req.body
+    );
+    if (!updated)
+      return res
+        .status(404)
+        .json({ error: true, message: "Resident not found" });
     res.status(200).json({ error: false, resident: updated });
   } catch (error) {
-    res.status(500).json({ error: true, message: 'Error updating resident', error });
+    res
+      .status(500)
+      .json({ error: true, message: "Error updating resident", error });
   }
 };
 
@@ -61,9 +77,16 @@ export const updateResident = async (req, res) => {
 export const deleteResident = async (req, res) => {
   try {
     const deleted = await residentServices.deleteResident(req.params.id);
-    if (!deleted) return res.status(404).json({ error: true, message: 'Resident not found' });
-    res.status(200).json({ error: false, message: 'Resident deleted successfully' });
+    if (!deleted)
+      return res
+        .status(404)
+        .json({ error: true, message: "Resident not found" });
+    res
+      .status(200)
+      .json({ error: false, message: "Resident deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: true, message: 'Error deleting resident', error });
+    res
+      .status(500)
+      .json({ error: true, message: "Error deleting resident", error });
   }
 };

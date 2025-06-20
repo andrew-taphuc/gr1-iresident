@@ -1,8 +1,27 @@
-import Vehicle from '../models/Vehicle.js';
+import Vehicle from "../models/Vehicle.js";
+import Household from "../models/Household.js";
 
 // Lấy tất cả phương tiện
-export const getAllVehicles = async () => {
-  return await Vehicle.findAll();
+export const getAllVehicles = async (apartmentId = null) => {
+  if (apartmentId) {
+    return await Vehicle.findAll({
+      include: [
+        {
+          model: Household,
+          where: { ApartmentID: apartmentId },
+          attributes: ["HouseholdID", "RoomNumber", "ApartmentID"],
+        },
+      ],
+    });
+  }
+  return await Vehicle.findAll({
+    include: [
+      {
+        model: Household,
+        attributes: ["HouseholdID", "RoomNumber", "ApartmentID"],
+      },
+    ],
+  });
 };
 
 // Lấy phương tiện theo ID

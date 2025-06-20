@@ -1,8 +1,9 @@
-import FeeType from '../models/FeeType.js';
+import FeeType from "../models/FeeType.js";
 
 // Lấy tất cả loại phí
-export const getAllFeeTypes = async () => {
-  return await FeeType.findAll();
+export const getAllFeeTypes = async (apartmentId = null) => {
+  const whereClause = apartmentId ? { ApartmentID: apartmentId } : {};
+  return await FeeType.findAll({ where: whereClause });
 };
 
 // Lấy loại phí theo ID

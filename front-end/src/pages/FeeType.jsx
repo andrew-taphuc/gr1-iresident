@@ -11,6 +11,7 @@ import axiosIntance from "../untils/axiosIntance";
 import AddFeeType from "../components/AddFeeType"; // Thêm dòng này
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import DeleteConfirmModal from "../components/DeleteConfirmModal"; 
+import { getSelectedApartmentId } from "../untils/apartmentContext";
 
 const FeeType = () => {
   const [open, setOpen] = useState(() => {
@@ -34,12 +35,10 @@ const FeeType = () => {
     fetchFeeTypes();
   }, []);
   const fetchFeeTypes = async () => {
-    try {
-      const res = await axiosIntance.get('/fee-type/get-all-fee-type');
-      setFeeTypes(res.data.feeTypes || res.data);
-    } catch {
-      setFeeTypes([]);
-    }
+    const apartmentId = getSelectedApartmentId();
+    const res = await axiosIntance.get(`/fee-type/get-all-fee-type${apartmentId ? `?apartmentId=${apartmentId}` : ''}`);
+    const data = res.data.feeTypes || res.data;
+    setFeeTypes(data);
   };
 
   // Lọc theo search
@@ -56,7 +55,11 @@ const FeeType = () => {
         await axiosIntance.put(`/fee-type/update-fee-type/${editFeeType.FeeTypeID}`, data);
         setToast({ message: "Cập nhật loại phí thành công!", type: "success" });
       } else {
-        await axiosIntance.post('/fee-type/create-fee-type', data);
+        const apartmentId = getSelectedApartmentId();
+        await axiosIntance.post('/fee-type/create-fee-type', {
+          ...data,
+          ApartmentID: apartmentId
+        });
         setToast({ message: "Thêm loại phí thành công!", type: "success" });
       }
       setShowAddFeeType(false);

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import axiosInstance from '../untils/axiosIntance';
+import { getSelectedApartmentName, clearSelectedApartment, getSelectedApartmentId } from '../untils/apartmentContext';
 
 let MAX_HOUSEHOLD = 100;
 let MAX_SINGLE_ROOMS = 50;
@@ -52,6 +54,7 @@ const getCompletionLevel = (percentage) => {
 };
 
 const Home = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(() => {
     const saved = localStorage.getItem('sidebarOpen');
     return saved === null ? false : JSON.parse(saved);
@@ -75,20 +78,37 @@ const Home = () => {
     paidFeeDetails: 0
   });
 
+  // Lấy tên apartment đã chọn
+  const selectedApartmentName = getSelectedApartmentName();
+
+  const handleSwitchApartment = () => {
+    clearSelectedApartment();
+    navigate('/list-apartment');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('id');
+    clearSelectedApartment();
+    navigate('/login');
+  };
+
   useEffect(() => {
     // Lấy dữ liệu hộ gia đình và cư dân
-    axiosInstance.get('/households/get-all-households').then(res => {
+    const apartmentId = getSelectedApartmentId();
+    axiosInstance.get(`/households/get-all-households${apartmentId ? `?apartmentId=${apartmentId}` : ''}`).then(res => {
       setHouseholds(res.data.households || res.data);
     });
-    axiosInstance.get('/residents/get-all-residents').then(res => {
+    axiosInstance.get(`/residents/get-all-residents${apartmentId ? `?apartmentId=${apartmentId}` : ''}`).then(res => {
       setResidents(res.data.residents || res.data);
     });
 
     // Lấy dữ liệu thu phí
-    axiosInstance.get('/fee-collection/get-all-collection').then(res => {
+    axiosInstance.get(`/fee-collection/get-all-collection${apartmentId ? `?apartmentId=${apartmentId}` : ''}`).then(res => {
       setFeeCollections(res.data.feeCollections || res.data);
     });
-    axiosInstance.get('/fee-detail/get-all-fee-detail').then(res => {
+    axiosInstance.get(`/fee-detail/get-all-fee-detail${apartmentId ? `?apartmentId=${apartmentId}` : ''}`).then(res => {
       // In ra cấu trúc dữ liệu của một FeeDetail để kiểm tra
       console.log('Cấu trúc dữ liệu FeeDetail:', res.data.feeDetails?.[0]);
       setFeeDetails(res.data.feeDetails);
@@ -240,6 +260,22 @@ const Home = () => {
             scrollbarColor: '#49aac0 #f1f1f1'
           }}
         >
+          {/* Apartment Info Bar */}
+          <div className="apartment-info-bar">
+            <div className="apartment-info">
+              <span className="apartment-label">Chung cư hiện tại:</span>
+              <span className="apartment-name">{selectedApartmentName}</span>
+            </div>
+            <div className="apartment-actions">
+              <button onClick={handleSwitchApartment} className="switch-apartment-btn">
+                Chuyển Chung Cư
+              </button>
+              <button onClick={handleLogout} className="logout-btn">
+                Đăng Xuất
+              </button>
+            </div>
+          </div>
+
           <div className="dashboard">
             {/* Hàng trên - 3 khối nhỏ */}
             <div className="dashboard-top">

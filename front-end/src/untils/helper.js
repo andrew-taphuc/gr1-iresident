@@ -4,8 +4,8 @@ export const validateEmail = (email) => {
 };
 
 export const validatePassword = (password) => {
-  // Password must be at least 8 characters (letters or numbers)
-  const regex = /^[A-Za-z\d]{8,}$/;
+  // Password must be at least 6 characters (letters or numbers)
+  const regex = /^[A-Za-z\d]{6,}$/;
   return regex.test(password);
 };
 

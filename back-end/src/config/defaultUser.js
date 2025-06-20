@@ -1,7 +1,7 @@
 export const defaultUser = {
-  Username: "admin1234",
+  Username: "admin",
   Password: "1234",
-  FullName: "Quang Hung Bui",
+  FullName: "Admin",
   Email: "admin123@gmail.com",
   PhoneNumber: "0123456789",
   Role: "Tổ trưởng",

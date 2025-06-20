@@ -1,5 +1,6 @@
 import React from 'react';
 import{ useState, useEffect } from 'react';
+import { getSelectedApartmentId } from '../untils/apartmentContext';
 import '../styles/AddResident.css'; 
 import axiosInstance from '../untils/axiosIntance';
 
@@ -8,7 +9,8 @@ const AddResident = ({ open, onClose, onSubmit, initialData = {} }) => {
   React.useEffect(() => {
     const fetchHouseholds = async () => {
       try {
-        const response = await axiosInstance.get('/households/get-all-households'); // API trả về danh sách hộ
+        const apartmentId = getSelectedApartmentId();
+        const response = await axiosInstance.get(`/households/get-all-households${apartmentId ? `?apartmentId=${apartmentId}` : ''}`); // API trả về danh sách hộ
         setHouseholds(response.data.households || response.data); // tuỳ theo cấu trúc backend
       } catch (error) {
         console.error("Lỗi khi lấy danh sách hộ:", error);

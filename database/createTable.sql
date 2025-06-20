@@ -3,17 +3,14 @@ CREATE TABLE Apartments (
   ApartmentID INT PRIMARY KEY AUTO_INCREMENT,
   ApartmentName VARCHAR(200) NOT NULL,
   Phone VARCHAR(20),
-  Address TEXT,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  Address TEXT
 );
 
 -- Bảng Roles (Vai trò)
 CREATE TABLE Roles (
   RoleID INT PRIMARY KEY AUTO_INCREMENT,
   RoleName ENUM('Tổ trưởng', 'Tổ phó', 'Thủ quỹ') NOT NULL UNIQUE,
-  Description TEXT,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+  Description TEXT
 );
 
 -- Bảng Users (đã bỏ trường Role)
@@ -24,9 +21,7 @@ CREATE TABLE Users (
   FullName VARCHAR(100) NOT NULL,
   Email VARCHAR(100),
   PhoneNumber VARCHAR(20),
-  Status ENUM('Đang hoạt động', 'Đã nghỉ việc') DEFAULT 'Đang hoạt động',
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  Status ENUM('Đang hoạt động', 'Đã nghỉ việc') DEFAULT 'Đang hoạt động'
 );
 
 -- Bảng User_Apartment (Liên kết User và Apartment)
@@ -34,7 +29,6 @@ CREATE TABLE User_Apartment (
   UserApartmentID INT PRIMARY KEY AUTO_INCREMENT,
   UserID INT NOT NULL,
   ApartmentID INT NOT NULL,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE,
   FOREIGN KEY (ApartmentID) REFERENCES Apartments(ApartmentID) ON DELETE CASCADE,
   UNIQUE KEY unique_user_apartment (UserID, ApartmentID)
@@ -46,8 +40,6 @@ CREATE TABLE User_Apartment_Role (
   UserApartmentID INT NOT NULL,
   RoleID INT NOT NULL,
   IsActive BOOLEAN DEFAULT TRUE,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (UserApartmentID) REFERENCES User_Apartment(UserApartmentID) ON DELETE CASCADE,
   FOREIGN KEY (RoleID) REFERENCES Roles(RoleID),
   UNIQUE KEY unique_user_apartment_role (UserApartmentID, RoleID)
@@ -63,8 +55,6 @@ CREATE TABLE Households (
   Members INT DEFAULT 0,
   HasVehicle BOOLEAN DEFAULT FALSE,
   Notes TEXT,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (ApartmentID) REFERENCES Apartments(ApartmentID),
   UNIQUE KEY unique_apartment_room (ApartmentID, RoomNumber)
 );
@@ -82,8 +72,6 @@ CREATE TABLE Residents (
   Occupation VARCHAR(100),
   ResidencyStatus ENUM('Thường trú', 'Tạm trú', 'Tạm vắng', 'Đã chuyển đi') NOT NULL DEFAULT 'Tạm trú',
   RegistrationDate DATE,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (HouseholdID) REFERENCES Households(HouseholdID)
 );
 
@@ -97,8 +85,6 @@ CREATE TABLE FeeTypes (
   Scope ENUM('Chung', 'Riêng') NOT NULL,
   UnitPrice DECIMAL(10,2),
   Unit VARCHAR(20),
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (ApartmentID) REFERENCES Apartments(ApartmentID)
 );
 
@@ -112,8 +98,6 @@ CREATE TABLE FeeCollections (
   TotalAmount DECIMAL(15,2),
   Status ENUM('Đang thu', 'Hoàn thành', 'Kết thúc') NOT NULL,
   Notes TEXT,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (FeeTypeID) REFERENCES FeeTypes(FeeTypeID)
 );
 
@@ -126,8 +110,6 @@ CREATE TABLE FeeDetails (
   PaymentDate DATE,
   PaymentMethod ENUM('Tiền mặt', 'Chuyển khoản') NOT NULL,
   PaymentStatus ENUM('Chưa đóng', 'Đã đóng') NOT NULL,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (CollectionID) REFERENCES FeeCollections(CollectionID),
   FOREIGN KEY (HouseholdID) REFERENCES Households(HouseholdID)
 );
@@ -142,8 +124,6 @@ CREATE TABLE Vehicles (
   Color VARCHAR(50),
   RegistrationDate DATE NOT NULL,
   Status ENUM('Còn hạn đăng ký gửi', 'Hết hạn đăng ký gửi') NOT NULL,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (HouseholdID) REFERENCES Households(HouseholdID)
 );
 

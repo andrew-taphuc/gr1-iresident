@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import axiosIntance from '../untils/axiosIntance';
+import { getSelectedApartmentId } from '../untils/apartmentContext';
 import '../styles/Vehicle.css';
 import AddButton from '../components/AddButton';
 import Toast from '../components/Toast';
@@ -90,7 +90,8 @@ const Vehicle = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axiosIntance.get('/vehicle/get-all-vehicle');
+      const apartmentId = getSelectedApartmentId();
+      const response = await axiosIntance.get(`/vehicle/get-all-vehicle${apartmentId ? `?apartmentId=${apartmentId}` : ''}`);
       console.log('Response vehicles:', response.data);
 
       if (response.data && response.data.vehicles && response.data.vehicles.length > 0) {
@@ -122,7 +123,7 @@ const Vehicle = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get(`http://localhost:3000/api/vehicle/get-vehicle-by-id/${id}`);
+      const response = await axiosIntance.get(`/vehicle/get-vehicle-by-id/${id}`);
       console.log('Thông tin xe:', response.data);
       return response.data;
     } catch (err) {
@@ -137,7 +138,8 @@ const Vehicle = () => {
   // Hàm fetch danh sách phòng
   const fetchRooms = async () => {
     try {
-      const response = await axiosIntance.get('/households/get-all-households');
+      const apartmentId = getSelectedApartmentId();
+      const response = await axiosIntance.get(`/households/get-all-households${apartmentId ? `?apartmentId=${apartmentId}` : ''}`);
       if (response.data && response.data.households) {
         const roomsData = response.data.households.map(household => ({
           roomNumber: household.RoomNumber,
@@ -185,7 +187,8 @@ const Vehicle = () => {
       setLoading(true);
       setError(null);
       // Tìm kiếm theo biển số xe
-      const allVehicles = await axiosIntance.get('/vehicle/get-all-vehicle');
+      const apartmentId = getSelectedApartmentId();
+      const allVehicles = await axiosIntance.get(`/vehicle/get-all-vehicle${apartmentId ? `?apartmentId=${apartmentId}` : ''}`);
       if (allVehicles.data && allVehicles.data.vehicles) {
         const filteredVehicles = allVehicles.data.vehicles.filter(
           vehicle => vehicle.LicensePlate.toLowerCase().replace(/-/g, '') === searchId.toLowerCase().replace(/-/g, '')

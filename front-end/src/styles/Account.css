@@ -201,6 +201,108 @@ html, body {
   transform: scale(1.1);
 }
 
+/* Styling cho container chứa buttons */
+.account-buttons {
+  position: fixed;
+  bottom: 140px; /* Trên navbar */
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 10;
+}
+
+/* Styling cho button thêm user đã có */
+.add-existing-user-btn {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  min-width: 160px;
+  justify-content: center;
+}
+
+.add-existing-user-btn:hover {
+  background: linear-gradient(135deg, #218838, #1e7e34);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+}
+
+.add-existing-user-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+/* Styling cho modal thêm user đã có */
+.add-existing-user-modal {
+  width: 90%;
+  max-width: 500px;
+}
+
+.add-existing-user-modal .form-group {
+  margin-bottom: 20px;
+}
+
+.add-existing-user-modal .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+.add-existing-user-modal .form-group input,
+.add-existing-user-modal .form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.add-existing-user-modal .form-group input:focus,
+.add-existing-user-modal .form-group select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+}
+
+.add-existing-user-modal .modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.add-existing-user-modal .modal-confirm {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-existing-user-modal .modal-confirm:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
 /* Modal overlay */
 .modal-overlay {
   position: fixed;

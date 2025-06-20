@@ -192,3 +192,28 @@ input:-webkit-autofill {
   -webkit-text-fill-color: #000 !important;
   transition: background-color 5000s ease-in-out 0s;
 }
+
+.register-link {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.register-link p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.register-link a {
+  color: #102eb4;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.register-link a:hover {
+  color: #051974;
+  text-decoration: underline;
+}

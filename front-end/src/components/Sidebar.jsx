@@ -29,7 +29,7 @@ const Sidebar = ({ open, setOpen }) => {
 
   // Tạo bản sao menuItems, thêm mục Account nếu là Tổ trưởng
   const sidebarMenu = [...menuItems];
-  if (userRole === 'Tổ trưởng') {
+  if (userRole?.toLowerCase() === 'tổ trưởng') {
     const settingsIndex = sidebarMenu.findIndex(item => item.label === 'Trang cá nhân');
     sidebarMenu.splice(settingsIndex, 0, {
       icon: <FaUser />,

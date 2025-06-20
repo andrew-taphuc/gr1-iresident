@@ -2,13 +2,19 @@ import FeeCollection from "../models/FeeCollection.js";
 import FeeType from "../models/FeeType.js";
 
 // Lấy tất cả đợt thu phí
-export const getAllFeeCollections = async () => {
+export const getAllFeeCollections = async (apartmentId = null) => {
+  const includeOptions = {
+    model: FeeType,
+    attributes: ["FeeTypeName", "Category", "Scope", "UnitPrice"],
+  };
+
+  if (apartmentId) {
+    includeOptions.where = { ApartmentID: apartmentId };
+  }
+
   return await FeeCollection.findAll({
-    include: {
-      model: FeeType,
-      attributes: ['FeeTypeName', 'Category', 'Scope', 'UnitPrice'], // Lấy những gì bạn cần từ FeeType
-    },
-    order: [['StartDate', 'DESC']], // Sắp xếp theo ngày bắt đầu mới nhất
+    include: includeOptions,
+    order: [["StartDate", "DESC"]], // Sắp xếp theo ngày bắt đầu mới nhất
   });
 };
 
@@ -24,8 +30,8 @@ export const createFeeCollection = async (data) => {
   return await FeeCollection.findByPk(created.CollectionID, {
     include: {
       model: FeeType,
-      attributes: ['FeeTypeName', 'Category', 'Scope', 'UnitPrice'],
-    }
+      attributes: ["FeeTypeName", "Category", "Scope", "UnitPrice"],
+    },
   });
 };
 

@@ -1,20 +1,45 @@
-import FeeDetail from '../models/FeeDetail.js'; 
-import Household from '../models/Household.js';
+import FeeDetail from "../models/FeeDetail.js";
+import Household from "../models/Household.js";
 
 // Lấy tất cả chi tiết phí
-export const getAllFeeDetails = async () => {
-  return await FeeDetail.findAll();
-};
-
-export const getFeeDetailsByCollectionId = (feeCollectionId) => {
-  return FeeDetail.findAll({
-    where: { CollectionID: feeCollectionId },
+export const getAllFeeDetails = async (apartmentId = null) => {
+  if (apartmentId) {
+    return await FeeDetail.findAll({
+      include: [
+        {
+          model: Household,
+          where: { ApartmentID: apartmentId },
+          attributes: ["HouseholdID", "HouseholdHead", "ApartmentID"],
+        },
+      ],
+    });
+  }
+  return await FeeDetail.findAll({
     include: [
       {
         model: Household,
-        attributes: ['HouseholdID', 'HouseholdHead'] // lấy những gì bạn cần
-      }
-    ]
+        attributes: ["HouseholdID", "HouseholdHead", "ApartmentID"],
+      },
+    ],
+  });
+};
+
+export const getFeeDetailsByCollectionId = (
+  feeCollectionId,
+  apartmentId = null
+) => {
+  const includeOptions = {
+    model: Household,
+    attributes: ["HouseholdID", "HouseholdHead", "ApartmentID"],
+  };
+
+  if (apartmentId) {
+    includeOptions.where = { ApartmentID: apartmentId };
+  }
+
+  return FeeDetail.findAll({
+    where: { CollectionID: feeCollectionId },
+    include: [includeOptions],
   });
 };
 
@@ -48,33 +73,33 @@ export const deleteFeeDetail = async (id) => {
 export const getFeeDetailStatsByCollectionId = async (feeCollectionId) => {
   // tổng số hộ
   const totalHouseholds = await FeeDetail.count({
-    where: { CollectionID: feeCollectionId }
+    where: { CollectionID: feeCollectionId },
   });
 
   // số đã đóng (PaymentStatus = 'Đã đóng')
   const paidCount = await FeeDetail.count({
     where: {
       CollectionID: feeCollectionId,
-      PaymentStatus: 'Đã đóng'
-    }
+      PaymentStatus: "Đã đóng",
+    },
   });
 
   // số chưa đóng
   const unpaidCount = totalHouseholds - paidCount;
 
   // tổng tiền thu được
-  const totalCollected = await FeeDetail.sum('Amount', {
+  const totalCollected = await FeeDetail.sum("Amount", {
     where: {
       CollectionID: feeCollectionId,
-      PaymentStatus: 'Đã đóng'
-    }
+      PaymentStatus: "Đã đóng",
+    },
   });
 
-  const totalRemaining = await FeeDetail.sum('Amount',{
+  const totalRemaining = await FeeDetail.sum("Amount", {
     where: {
       CollectionID: feeCollectionId,
-      PaymentStatus: 'Chưa đóng'
-    }
+      PaymentStatus: "Chưa đóng",
+    },
   });
 
   return {
@@ -82,6 +107,6 @@ export const getFeeDetailStatsByCollectionId = async (feeCollectionId) => {
     paidCount,
     unpaidCount,
     totalCollected: totalCollected || 0,
-    totalRemaining: totalRemaining || 0
+    totalRemaining: totalRemaining || 0,
   };
 };

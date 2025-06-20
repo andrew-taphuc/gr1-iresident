@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import axiosInstance from '../untils/axiosIntance';
+import { getSelectedApartmentId } from '../untils/apartmentContext';
 import '../styles/FeeDetailSpecial.css';
 
 const FeeDetailSpecial = ({CollectionID, FeeTypeName}) => {
@@ -15,7 +16,8 @@ const FeeDetailSpecial = ({CollectionID, FeeTypeName}) => {
   React.useEffect(() => {
     const loadHouseholds = async () => {
       try {
-        const res = await axiosInstance.get('/households/get-all-households');
+        const apartmentId = getSelectedApartmentId();
+        const res = await axiosInstance.get(`/households/get-all-households${apartmentId ? `?apartmentId=${apartmentId}` : ''}`);
         setHouseholds(res.data.households || res.data);
       } catch (err) {
         setHouseholds([]);
@@ -27,8 +29,12 @@ const FeeDetailSpecial = ({CollectionID, FeeTypeName}) => {
   // Fetch fee detail records
   const fetchRecords = async () => {
     try {
+      const apartmentId = getSelectedApartmentId();
       const res = await axiosInstance.get('/fee-detail/get-all-fee-detail', {
-        params: { feeCollectionId: CollectionID }
+        params: { 
+          feeCollectionId: CollectionID,
+          apartmentId: apartmentId
+        }
       });
       // Gắn thêm thông tin household vào record
       const data = res.data.feeDetails || [];

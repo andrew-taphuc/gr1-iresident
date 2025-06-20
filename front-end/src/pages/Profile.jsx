@@ -91,6 +91,9 @@ const Profile = () => {
 
   if (!userInfo) return <div>Đang tải thông tin...</div>;
 
+  // Lấy role từ localStorage
+  const userRole = localStorage.getItem('role') || 'Cư dân';
+
   return (
     <div className="settings-container">
       <Toast
@@ -108,7 +111,7 @@ const Profile = () => {
             <p><b>Tên đăng nhập:</b> {userInfo.Username}</p>
             <p><b>Email:</b> {userInfo.Email}</p>
             <p><b>Số điện thoại:</b> {userInfo.PhoneNumber}</p>
-            <p><b>Vai trò:</b> {userInfo.Role}</p>
+            <p><b>Vai trò:</b> {userRole}</p>
             <button
               className="profile-edit-btn"
               onClick={() => setShowEdit(v => !v)}

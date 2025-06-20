@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import '../styles/Login.css';
 import loginImage from '../assets/v5.jpg';
 import axiosInstance from '../untils/axiosIntance'; 
@@ -54,7 +54,7 @@ const Login = () => {
       localStorage.setItem('id', data.id);
       // console.log("id", data.id);
       // console.log(data);
-      navigate('/home');
+      navigate('/list-apartment');
     } catch (err) {
       const msg = err.response?.data?.message || 'Đăng nhập thất bại';
       setError(msg);
@@ -131,6 +131,9 @@ const Login = () => {
               {loading ? 'Đang đăng nhập...' : 'Đăng Nhập'}
             </button>
           </form>
+          <div className="register-link">
+            <p>Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link></p>
+          </div>
         </div>
       </div>
     </div>

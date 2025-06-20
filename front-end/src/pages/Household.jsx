@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
@@ -12,6 +12,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import axiosIntance from '../untils/axiosIntance';
 import Toast from '../components/Toast';
 import DeleteConfirmModal from '../components/DeleteConfirmModal';
+import { getSelectedApartmentId } from "../untils/apartmentContext";
 
 const Household = () => {
   const [open, setOpen] = React.useState(() => {
@@ -45,14 +46,17 @@ const Household = () => {
   );
 
   const fetchHouseholds = async () => {
-    const response = await axiosIntance.get('/households/get-all-households');
+    const apartmentId = getSelectedApartmentId();
+    const response = await axiosIntance.get(`/households/get-all-households${apartmentId ? `?apartmentId=${apartmentId}` : ''}`);
     const data = response.data.households || response.data;
     setHouseholds(sortByRoomNumber(data));
   };
 
   const handleAddHousehold = async (data) => {
     try {
+      const apartmentId = getSelectedApartmentId();
       const response = await axiosIntance.post('/households/create-household', {
+        ApartmentID: apartmentId,
         RoomNumber: data.roomNumber,
         Type: data.type,
         HouseholdHead: data.householdHead,
@@ -139,7 +143,8 @@ const Household = () => {
   // Lấy danh sách nhân khẩu khi load trang
   React.useEffect(() => {
     const fetchResidents = async () => {
-      const res = await axiosIntance.get('/residents/get-all-residents');
+      const apartmentId = getSelectedApartmentId();
+      const res = await axiosIntance.get(`/residents/get-all-residents${apartmentId ? `?apartmentId=${apartmentId}` : ''}`);
       setResidents(res.data.residents || res.data);
     };
     fetchResidents();

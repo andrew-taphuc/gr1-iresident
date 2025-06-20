@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import '../styles/Fee.css';
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
@@ -13,6 +13,7 @@ import FeeDetailTable from '../components/FeeDetailTable';
 import Toast from '../components/Toast';
 import DeleteConfirmModal from '../components/DeleteConfirmModal';
 import FeeDetailSpecial from '../components/FeeDetailSpecial';
+import { getSelectedApartmentId } from "../untils/apartmentContext";
 
 const safeArray = (input) => Array.isArray(input) ? input : [];
 
@@ -47,7 +48,8 @@ const Fee = () => {
  const fetchFeeDetailsByCollectionId = async (collectionId) => {
     console.log("Fetching details for collection ID:", collectionId);
     try {
-      const res = await axiosIntance.get(`/fee-detail/get-all-fee-detail?feeCollectionId=${collectionId}`);
+      const apartmentId = getSelectedApartmentId();
+      const res = await axiosIntance.get(`/fee-detail/get-all-fee-detail?feeCollectionId=${collectionId}${apartmentId ? `&apartmentId=${apartmentId}` : ''}`);
       console.log("API response:", res.data);
       const data = res.data.feeDetails || res.data; // tùy API trả về
       console.log("Processed data:", data);
@@ -101,7 +103,8 @@ const Fee = () => {
 
   const fetchFeeCollection= async () => {
     try {
-    const res = await axiosIntance.get('/fee-collection/get-all-collection');
+    const apartmentId = getSelectedApartmentId();
+    const res = await axiosIntance.get(`/fee-collection/get-all-collection${apartmentId ? `?apartmentId=${apartmentId}` : ''}`);
     const data = res.data.feeCollections || res.data;
 
     setFeeCollection(safeArray(data)); // tránh mọi lỗi
@@ -130,7 +133,8 @@ const Fee = () => {
       const ftn = response.data.feeCollection?.FeeType?.FeeTypeName;
 
       // Lấy danh sách hộ gia đình và amount mặc định
-      const householdRes = await axiosIntance.get(`/households/get-all-households`);
+      const apartmentId = getSelectedApartmentId();
+      const householdRes = await axiosIntance.get(`/households/get-all-households${apartmentId ? `?apartmentId=${apartmentId}` : ''}`);
       const households = householdRes.data.households || [];
       const defaultAmount = response.data.feeCollection?.FeeType?.UnitPrice;
 

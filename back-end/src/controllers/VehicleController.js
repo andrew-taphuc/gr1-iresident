@@ -3,7 +3,8 @@ import * as vehicleService from "../services/VehicleServices.js";
 // Lấy tất cả phương tiện
 export const getAllVehicles = async (req, res) => {
   try {
-    const vehicles = await vehicleService.getAllVehicles();
+    const { apartmentId } = req.query;
+    const vehicles = await vehicleService.getAllVehicles(apartmentId);
     res.status(200).json({ error: false, vehicles });
   } catch (error) {
     res
@@ -31,16 +32,21 @@ export const getVehicleById = async (req, res) => {
 // Thêm phương tiện mới
 export const createVehicle = async (req, res) => {
   try {
-    const { HouseholdID, LicensePlate, VehicleType, RegistrationDate, Status, Brand, Color } =
-      req.body;
+    const {
+      HouseholdID,
+      VehicleType,
+      LicensePlate,
+      Brand,
+      Color,
+      RegistrationDate,
+      Status,
+    } = req.body;
     if (
       !HouseholdID ||
       !VehicleType ||
       !LicensePlate ||
       !RegistrationDate ||
-      !Status ||
-      !Brand ||
-      !Color
+      !Status
     ) {
       return res
         .status(400)
@@ -50,13 +56,11 @@ export const createVehicle = async (req, res) => {
     res.status(201).json({ error: false, vehicle: newVehicle });
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({
-        error: true,
-        message: "Error creating vehicle",
-        detail: error.message,
-      });
+    return res.status(500).json({
+      error: true,
+      message: "Error creating vehicle",
+      detail: error.message,
+    });
   }
 };
 

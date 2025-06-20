@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
@@ -12,6 +12,7 @@ import axiosIntance from '../untils/axiosIntance';
 import Toast from '../components/Toast';
 import DeleteConfirmModal from '../components/DeleteConfirmModal';
 import { validatePhoneNumber } from '../untils/helper';
+import { getSelectedApartmentId } from "../untils/apartmentContext";
 
 const Resident = () => {
   const [open, setOpen] = React.useState(() => {
@@ -41,7 +42,8 @@ const Resident = () => {
 
   React.useEffect(() => {
     const fetchHouseholds = async () => {
-      const res = await axiosIntance.get('/households/get-all-households');
+      const apartmentId = getSelectedApartmentId();
+      const res = await axiosIntance.get(`/households/get-all-households${apartmentId ? `?apartmentId=${apartmentId}` : ''}`);
       setHouseholds(res.data.households || res.data);
     };
     fetchHouseholds();
@@ -147,9 +149,9 @@ const Resident = () => {
   }, [search, residentsByRoom]);
 
   const fetchResidents = async () => {
-    const response = await axiosIntance.get('/residents/get-all-residents');
-    const data = response.data.residents || response.data;
-    setResidents(data);
+    const apartmentId = getSelectedApartmentId();
+    const res = await axiosIntance.get(`/residents/get-all-residents${apartmentId ? `?apartmentId=${apartmentId}` : ''}`);
+    setResidents(res.data.residents || res.data);
   };
 
   const handleAddResident = async (data) => {

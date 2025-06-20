@@ -1,6 +1,7 @@
 import React from 'react';
 import{ useState, useEffect } from 'react';
 import axiosInstance from '../untils/axiosIntance';
+import { getSelectedApartmentId } from '../untils/apartmentContext';
 import '../styles/AddFeeCollection.css';
 import AddFeeType from './AddFeeType';
 const AddFeeCollection = ({ open, onClose, onSubmit, initialData = {} }) => {
@@ -10,7 +11,8 @@ const AddFeeCollection = ({ open, onClose, onSubmit, initialData = {} }) => {
     React.useEffect(() => {
         const fetchFeeType = async () => {
             try {
-                const response = await axiosInstance.get('/fee-type/get-all-fee-type'); 
+                const apartmentId = getSelectedApartmentId();
+                const response = await axiosInstance.get(`/fee-type/get-all-fee-type${apartmentId ? `?apartmentId=${apartmentId}` : ''}`); 
                 setFeeType(response.data.feeTypes || response.data); // tuỳ theo cấu trúc backend
             } catch (error) {
                 console.error("Lỗi khi lấy danh sách loại phí:", error);
@@ -185,7 +187,11 @@ const AddFeeCollection = ({ open, onClose, onSubmit, initialData = {} }) => {
                 onClose={() => setShowAddFeeType(false)}
                 onSubmit={async (data) => {
                     try {
-                        const res = await axiosInstance.post('/fee-type/create-fee-type', data);
+                        const apartmentId = getSelectedApartmentId();
+                        const res = await axiosInstance.post('/fee-type/create-fee-type', {
+                            ...data,
+                            ApartmentID: apartmentId
+                        });
                         const created = res.data.feeType || res.data;
 
                         //✅ Thêm loại mới vào dropdown và chọn nó luôn
