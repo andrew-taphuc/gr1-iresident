@@ -22,6 +22,7 @@ const Household = sequelize.define(
     },
     Type: {
       type: DataTypes.ENUM("Đơn", "Đôi"),
+      defaultValue: "Đôi",
       allowNull: false,
     },
     HouseholdHead: {

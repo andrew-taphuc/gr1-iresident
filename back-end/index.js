@@ -81,7 +81,7 @@ app.use("/api/user-apartment-roles", UserApartmentRoleRoutes);
     // await sequelize.sync({ force: true }); // xóa bảng và tạo lại - dùng khi cần làm mới cơ sở dữ liệu, sẽ bị mất dữ liệu
 
     // Tạo người dùng mặc định
-    await createDefaultUser();
+    // await createDefaultUser();
 
     // Tạo các role mặc định
     await createDefaultRoles();
