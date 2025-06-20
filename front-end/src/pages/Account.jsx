@@ -34,6 +34,7 @@ const Account = () => {
     email: '',
     role: ''
   });
+  const [roles, setRoles] = useState([]);
 
   const handleDeleteAccount = async (userApartmentId) => {
     try {
@@ -47,10 +48,22 @@ const Account = () => {
     }
   };
 
-  // Lấy danh sách tài khoản (giả lập hoặc từ API)
+  // Lấy danh sách tài khoản và roles
   React.useEffect(() => {
     fetchAccounts();
+    fetchRoles();
   }, []);
+
+  const fetchRoles = async () => {
+    try {
+      const response = await axiosIntance.get('/roles/get-all-roles');
+      if (response.data.error === false) {
+        setRoles(response.data.roles);
+      }
+    } catch (error) {
+      console.error('Error fetching roles:', error);
+    }
+  };
 
   const fetchAccounts = async () => {
     try {
@@ -316,7 +329,7 @@ const Account = () => {
           }
         }
         
-        // BƯỚC 3: Thêm user vào apartment
+        // BƯỚC 3: Thêm user vào apartment với id hiện tại
         console.log('Step 3: Adding user to apartment...');
         const userApartmentResponse = await axiosIntance.post('/user-apartments/create-user-apartment', {
           UserID: userId,
@@ -325,22 +338,23 @@ const Account = () => {
         
         if (userApartmentResponse.data.error === false) {
           const userApartmentId = userApartmentResponse.data.userApartment.UserApartmentID;
+          console.log('UserApartment created with ID:', userApartmentId);
           
-          // BƯỚC 4: Gán role nếu có
+          // BƯỚC 4: Thêm userApartmentID vào bảng user_apartment_role với id tương ứng
           if (data.role && data.role !== '') {
-            console.log('Step 4: Assigning role...');
+            console.log('Step 4: Adding userApartmentID to user_apartment_role...');
             
-            const rolesResponse = await axiosIntance.get('/roles/get-all-roles');
-            if (rolesResponse.data.error === false) {
-              const selectedRole = rolesResponse.data.roles.find(role => role.RoleName === data.role);
-              if (selectedRole) {
-                await axiosIntance.post('/user-apartment-roles/create-user-apartment-role', {
-                  UserApartmentID: userApartmentId,
-                  RoleID: selectedRole.RoleID,
-                  IsActive: true
-                });
-                console.log('Role assigned successfully:', data.role);
-              }
+            // Tìm RoleID từ role name
+            const selectedRole = roles.find(role => role.RoleName === data.role);
+            if (selectedRole) {
+              await axiosIntance.post('/user-apartment-roles/create-user-apartment-role', {
+                UserApartmentID: userApartmentId,
+                RoleID: selectedRole.RoleID,
+                IsActive: true
+              });
+              console.log('Role assigned successfully:', data.role, 'with RoleID:', selectedRole.RoleID);
+            } else {
+              console.warn('Role not found:', data.role);
             }
           }
           
@@ -564,74 +578,25 @@ const Account = () => {
               </button>
             </div>
             <AddAccount
-              open={showAddAccount || !!editAccount}
+              open={showAddAccount || !!editAccount || showAddExistingUser}
               onClose={() => {
                 setShowAddAccount(false);
                 setEditAccount(null);
+                setShowAddExistingUser(false);
+                setExistingUserData({ email: '', role: '' });
               }}
               onSubmit={(data) => {
                 if (editAccount) {
                   handleEditAccount(data);
+                } else if (showAddExistingUser) {
+                  handleAddExistingUser(data);
                 } else {
                   handleAddAccount(data);
                 }
               }}
-              initialData={editAccount ? editAccount : {}}
-              mode={editAccount ? "edit" : "add"}   // Thêm dòng này
+              initialData={editAccount ? editAccount : (showAddExistingUser ? existingUserData : {})}
+              mode={editAccount ? "edit" : (showAddExistingUser ? "add-existing" : "add")}
             />
-            
-            {/* Modal thêm user đã tồn tại */}
-            {showAddExistingUser && (
-              <div className="modal-overlay" onClick={() => setShowAddExistingUser(false)}>
-                <div className="modal add-existing-user-modal" onClick={e => e.stopPropagation()}>
-                  <h2>Thêm user đã có vào chung cư</h2>
-                  <form onSubmit={(e) => {
-                    e.preventDefault();
-                    handleAddExistingUser(existingUserData);
-                  }}>
-                    <div className="form-group">
-                      <label>Email:</label>
-                      <input
-                        type="email"
-                        value={existingUserData.email}
-                        onChange={(e) => setExistingUserData({...existingUserData, email: e.target.value})}
-                        placeholder="Nhập email của user đã tồn tại"
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Vai trò:</label>
-                      <select
-                        value={existingUserData.role}
-                        onChange={(e) => setExistingUserData({...existingUserData, role: e.target.value})}
-                      >
-                        <option value="">-- Chọn vai trò --</option>
-                        {roles.map((role) => (
-                          <option key={role.RoleID} value={role.RoleID}>
-                            {role.RoleName}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="modal-actions">
-                      <button 
-                        type="button" 
-                        className="modal-cancel"
-                        onClick={() => {
-                          setShowAddExistingUser(false);
-                          setExistingUserData({ email: '', role: '' });
-                        }}
-                      >
-                        Hủy
-                      </button>
-                      <button type="submit" className="modal-confirm">
-                        Thêm vào chung cư
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
             <DeleteConfirmModal
               open={!!deletingAccount}
               title="Xác nhận xóa tài khoản"

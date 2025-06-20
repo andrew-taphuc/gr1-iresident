@@ -243,65 +243,7 @@ html, body {
   box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
 }
 
-/* Styling cho modal thêm user đã có */
-.add-existing-user-modal {
-  width: 90%;
-  max-width: 500px;
-}
 
-.add-existing-user-modal .form-group {
-  margin-bottom: 20px;
-}
-
-.add-existing-user-modal .form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: var(--text-color);
-  font-size: 14px;
-}
-
-.add-existing-user-modal .form-group input,
-.add-existing-user-modal .form-group select {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  box-sizing: border-box;
-}
-
-.add-existing-user-modal .form-group input:focus,
-.add-existing-user-modal .form-group select:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
-}
-
-.add-existing-user-modal .modal-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  margin-top: 24px;
-}
-
-.add-existing-user-modal .modal-confirm {
-  background: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 24px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.add-existing-user-modal .modal-confirm:hover {
-  background: var(--primary-hover);
-  transform: translateY(-1px);
-}
 
 /* Modal overlay */
 .modal-overlay {
