@@ -35,6 +35,11 @@ const AddAccount = ({ open, onClose, onSubmit, initialData, mode }) => {
         role: 'Tổ phó',
         status: 'Đang hoạt động',
       });
+    } else if (mode === "add-existing" && initialData) {
+      setForm({
+        email: initialData.email || '',
+        role: initialData.role || '',
+      });
     }
     // eslint-disable-next-line
   }, [open]); // Chỉ reset khi open thay đổi (tức là khi modal vừa mở)
@@ -62,19 +67,21 @@ const AddAccount = ({ open, onClose, onSubmit, initialData, mode }) => {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <h2>{mode === "edit" ? 'Cập nhật tài khoản' : 'Thêm mới tài khoản'}</h2>
+        <h2>{mode === "edit" ? 'Cập nhật tài khoản' : (mode === "add-existing" ? 'Thêm user đã có vào chung cư' : 'Thêm mới tài khoản')}</h2>
         <form onSubmit={handleSubmit} className="add-account-form">
-          <div className="form-group">
-            <label>Tên đăng nhập</label>
-            <input
-              type="text"
-              name="username"
-              value={form.username}
-              onChange={handleChange}
-              placeholder="Nhập tên đăng nhập"
-              required
-            />
-          </div>
+          {mode !== "add-existing" && (
+            <div className="form-group">
+              <label>Tên đăng nhập</label>
+              <input
+                type="text"
+                name="username"
+                value={form.username}
+                onChange={handleChange}
+                placeholder="Nhập tên đăng nhập"
+                required
+              />
+            </div>
+          )}
           <div className="form-group">
             <label>Email</label>
             <input
@@ -82,32 +89,36 @@ const AddAccount = ({ open, onClose, onSubmit, initialData, mode }) => {
               name="email"
               value={form.email}
               onChange={handleChange}
-              placeholder="Nhập email"
+              placeholder={mode === "add-existing" ? "Nhập email của user đã tồn tại" : "Nhập email"}
               required
             />
           </div>
-          <div className="form-group">
-            <label>Họ và tên</label>
-            <input 
-              type="text"
-              name="fullname"
-              value={form.fullname || ''}
-              onChange={handleChange}
-              placeholder="Nhập họ và tên"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Số điện thoại</label>
-            <input
-              type="text"
-              name="phoneNumber"
-              value={form.phoneNumber || ''}
-              onChange={handleChange}
-              placeholder="Nhập số điện thoại"
-              required
-            />
-          </div>
+          {mode !== "add-existing" && (
+            <>
+              <div className="form-group">
+                <label>Họ và tên</label>
+                <input 
+                  type="text"
+                  name="fullname"
+                  value={form.fullname || ''}
+                  onChange={handleChange}
+                  placeholder="Nhập họ và tên"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Số điện thoại</label>
+                <input
+                  type="text"
+                  name="phoneNumber"
+                  value={form.phoneNumber || ''}
+                  onChange={handleChange}
+                  placeholder="Nhập số điện thoại"
+                  required
+                />
+              </div>
+            </>
+          )}
           <div className="form-group">
             <label>Vai trò</label>
             <select
@@ -115,9 +126,12 @@ const AddAccount = ({ open, onClose, onSubmit, initialData, mode }) => {
               value={form.role}
               onChange={handleChange}
             >
-              {/* <option value="Tổ trưởng">Tổ trưởng</option> */}
-              <option value="Tổ phó">Tổ phó</option>
+              {mode === "add-existing" && <option value="">-- Chọn vai trò --</option>}
+              <option value="Tổ trưởng">Tổ trưởng</option>
+              <option value="Phó tổ trưởng">Phó tổ trưởng</option>
+              <option value="Thư ký">Thư ký</option>
               <option value="Thủ quỹ">Thủ quỹ</option>
+              <option value="Cư dân">Cư dân</option>
             </select>
           </div>
           {mode === "edit" && (
@@ -133,22 +147,24 @@ const AddAccount = ({ open, onClose, onSubmit, initialData, mode }) => {
               </select>
             </div>
           )}
-          <div className="form-group">
-            <label>
-              Mật khẩu {mode === "edit" && <span style={{fontWeight: 400, fontSize: 13}}>(Để trống nếu không đổi)</span>}
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="Nhập mật khẩu"
-              // required={mode === "add"}
-            />
-          </div>
+          {mode !== "add-existing" && (
+            <div className="form-group">
+              <label>
+                Mật khẩu {mode === "edit" && <span style={{fontWeight: 400, fontSize: 13}}>(Để trống nếu không đổi)</span>}
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                placeholder="Nhập mật khẩu"
+                required={mode === "add"}
+              />
+            </div>
+          )}
           <div className="account-modal-actions">
             <button type="submit">
-              {mode === "edit" ? "Cập nhật" : "Thêm mới"}
+              {mode === "edit" ? "Cập nhật" : (mode === "add-existing" ? "Thêm vào chung cư" : "Thêm mới")}
             </button>
             <button type="button" className="account-modal-cancel" onClick={onClose}>
               Hủy
