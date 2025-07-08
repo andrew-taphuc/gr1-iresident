@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import '../styles/Account.css';
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
@@ -35,6 +35,22 @@ const Account = () => {
     role: ''
   });
   const [roles, setRoles] = useState([]);
+  const [showAddAccountMenu, setShowAddAccountMenu] = useState(false);
+  const addAccountMenuRef = useRef(null);
+
+  // Đóng menu khi click ra ngoài
+  useEffect(() => {
+    if (!showAddAccountMenu) return;
+    const handleClickOutside = (event) => {
+      if (addAccountMenuRef.current && !addAccountMenuRef.current.contains(event.target)) {
+        setShowAddAccountMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showAddAccountMenu]);
 
   const handleDeleteAccount = async (userApartmentId) => {
     try {
@@ -512,6 +528,27 @@ const Account = () => {
                 />
               </div>
             </div>
+            <div className="account-add-btn-row">
+              <div className="add-account-dropdown" ref={addAccountMenuRef}>
+                <button
+                  className="add-account-btn"
+                  onClick={() => setShowAddAccountMenu((v) => !v)}
+                  title="Thêm tài khoản"
+                >
+                  <FaUserPlus /> Thêm tài khoản
+                </button>
+                {showAddAccountMenu && (
+                  <div className="add-account-menu">
+                    <div onClick={() => { setShowAddAccount(true); setShowAddAccountMenu(false); }}>
+                      Thêm mới tài khoản
+                    </div>
+                    <div onClick={() => { setShowAddExistingUser(true); setShowAddAccountMenu(false); }}>
+                      Thêm user đã có
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
             <div className="account-list">
               {filteredAccounts.map((acc, idx) => (
                 <div
@@ -567,16 +604,6 @@ const Account = () => {
                 </div>
               </div>
             )}
-            <div className="account-buttons">
-              <AddButton onClick={() => setShowAddAccount(true)} />
-              <button 
-                className="add-existing-user-btn"
-                onClick={() => setShowAddExistingUser(true)}
-                title="Thêm user đã có vào chung cư"
-              >
-                <FaUserPlus /> Thêm user đã có
-              </button>
-            </div>
             <AddAccount
               open={showAddAccount || !!editAccount || showAddExistingUser}
               onClose={() => {
