@@ -146,6 +146,8 @@ const ListApartment = () => {
               RoleID: leaderRoleId,
               IsActive: true
             });
+            // Lưu role "Tổ trưởng" vào localStorage
+            localStorage.setItem('role', 'Tổ trưởng');
           }
           // Lưu apartment mới vào context và chuyển sang home
           setSelectedApartment(newApartmentId, newApartment.ApartmentName);
