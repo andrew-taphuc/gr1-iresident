@@ -41,16 +41,116 @@
 - Ví dụ: băm mật khẩu bằng MD5 theo công thức: MD5(key+"myapp"+key).
 - Ví dụ: tạo id cho đối tượng bằng GUID, hoặc bằng hàm random.
 
-### THIẾT KẾ CƠ SỞ DỮ LIỆU
+### THIẾT KẾ CƠ SỞ DỮ LIỆU    999 
 
 - Sơ đồ quan hệ thực thể để thể hiện mối quan hệ giữa các trường thông tin.
-- Giải thích các table, và một vài table.field quan trọng
-- Cấu trúc các file cấu hình như .env, .conf, .xml
 
-### CÁC PAYLOAD
+<div align="center">
+  <img src="design/ERD.png" alt="ERD" />
+  <br>
+  <em>Hình: Sơ đồ quan hệ thực thể (ERD)</em>
+</div>
+
+- Giải thích các table, và một vài table.field quan trọng
+  - **User**
+    - Quản lý thông tin tài khoản người dùng, có thể thuộc nhiều tenant (căn hộ/chung cư).
+    - Trường quan trọng:
+      - `id`: Khóa chính
+      - `username`: Tên đăng nhập
+      - `password`: Mật khẩu (băm)
+      - `email`: Email liên hệ
+
+  - **Apartment**
+    - Đại diện cho từng tenant (căn hộ/chung cư) trong hệ thống.
+    - Trường quan trọng:
+      - `id`: Khóa chính
+      - `name`: Tên/mã căn hộ
+      - `address`: Địa chỉ
+
+  - **UserApartment**
+    - Bảng liên kết nhiều-nhiều giữa User và Apartment, cho phép một user thuộc nhiều apartment (multi-tenant).
+    - Trường quan trọng:
+      - `id`: Khóa chính
+      - `userId`: Liên kết User
+      - `apartmentId`: Liên kết Apartment
+
+  - **Role**
+    - Danh sách các vai trò (admin, resident, guard, ...).
+    - Trường quan trọng:
+      - `id`: Khóa chính
+      - `name`: Tên vai trò
+
+  - **UserApartmentRole**
+    - Gán vai trò cho user ở từng apartment, cho phép một user có vai trò khác nhau ở các tenant khác nhau.
+    - Trường quan trọng:
+      - `id`: Khóa chính
+      - `userApartmentId`: Liên kết UserApartment
+      - `roleId`: Liên kết Role
+
+  - **Ví dụ luồng dữ liệu đa khách hàng:**
+    - Một user có thể là tổ trưởng (admin) ở apartment A, nhưng chỉ là cư dân (resident) ở apartment B.
+    - Khi đăng nhập, hệ thống xác định user đang thao tác với tenant (apartment) nào, và phân quyền dựa trên UserApartmentRole.
+
+- Cấu trúc các file cấu hình như .env, .conf, .xml
+- Cấu hình file .env
+  ```env
+  DB_HOST="Your database host"
+  DB_USER="Your database user"
+  DB_PASSWORD="Your database password"
+  DB_NAME="Your database name"
+  DB_PORT="Your database port"
+  JWT_SECRET="Your JWT secret key"
+  ```
+
+### CÁC PAYLOAD   999 
 
 - Cấu trúc các gói json
-- Nội dung trao đổi giữa các module, cảm biến
+
+  **Ví dụ các payload trao đổi giữa các module/API:**
+
+  - **Tạo căn hộ mới (Apartment):**
+    ```json
+    {
+      "ApartmentName": "Chung cư A",
+      "Phone": "02812345678",
+      "Address": "123 Đường ABC, Quận 1, TP.HCM"
+    }
+    ```
+
+  
+  - **Gán vai trò cho user ở một căn hộ (User_Apartment_Role):**  
+    ```json
+    {
+      "UserApartmentID": 2,
+      "RoleID": 1,
+      "IsActive": true
+    }
+    ```
+
+### DEPENDENCES CHÍNH   999 
+
+  **Backend:**
+  ```
+  - express
+  - sequelize (ORM)
+  - mysql2
+  - jsonwebtoken (JWT)
+  - bcrypt
+  - cors
+  - helmet
+  - morgan
+  - dotenv
+  ```
+
+  **Frontend:**
+  ```
+  - react
+  - ant-design
+  - react-router-dom
+  - axios
+  - recharts
+  - react-icons
+  ```
 
 ### ĐẶC TẢ HÀM
 
