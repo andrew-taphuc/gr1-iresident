@@ -136,12 +136,53 @@ Cài đặt MySQL:
 
 ## NGUYÊN LÝ CƠ BẢN
 
-> Tham khảo cách trình bày như ở đây [Code Project](https://www.codeproject.com/Articles/5385907/Managing-Cplusplus-Projects-with-Conan-and-CMake)
+### 1. Mục tiêu của kiến trúc multi-tenant
 
-### TÍCH HỢP HỆ THỐNG
+Kiến trúc multi-tenant cho phép một hệ thống phần mềm phục vụ nhiều khách hàng (tenant) trên cùng một nền tảng, nhưng dữ liệu và quyền truy cập của từng tenant được tách biệt rõ ràng. Trong ứng dụng quản lý chung cư BlueMoon, mỗi căn hộ/chung cư được xem như một tenant riêng biệt. Điều này giúp hệ thống dễ dàng mở rộng, quản lý và đảm bảo tính bảo mật dữ liệu giữa các khách hàng.
 
-- Mô tả các thành phần phần cứng và vai trò của chúng: máy chủ, máy trạm, thiết bị IoT, MQTT Server, module cảm biến IoT...
-- Mô tả các thành phần phần mềm và vai trò của chúng, vị trí nằm trên phần cứng nào: Front-end, Back-end, Worker, Middleware...
+### 2. Thiết kế bảng dữ liệu phục vụ multi-tenant
+
+Để hiện thực hóa kiến trúc multi-tenant, hệ thống sử dụng các bảng chính và các bảng liên kết (join table) như sau:
+
+- **Users**: Quản lý thông tin tài khoản người dùng. Một user có thể thuộc nhiều tenant (căn hộ/chung cư).
+- **Apartments**: Đại diện cho từng tenant (căn hộ/chung cư) trong hệ thống.
+- **User_Apartment**: Bảng liên kết nhiều-nhiều giữa User và Apartment, cho phép một user thuộc nhiều apartment (multi-tenant). Đây là bảng trung gian xác định user thuộc những tenant nào.
+- **Roles**: Danh sách các vai trò (tổ trưởng, thủ quỹ, tổ phó, cư dân, ...).
+- **User_Apartment_Role**: Bảng liên kết giữa User_Apartment và Role, cho phép một user có nhiều vai trò khác nhau ở từng apartment khác nhau.
+
+#### Sơ đồ quan hệ:
+
+- Một User có thể thuộc nhiều Apartment (qua bảng User_Apartment)
+- Một User_Apartment có thể có nhiều Role (qua bảng User_Apartment_Role)
+- Một Role có thể được gán cho nhiều User_Apartment
+
+### 3. Luồng phân quyền động
+
+- Khi người dùng đăng nhập, hệ thống xác định user này thuộc những apartment nào thông qua bảng User_Apartment.
+- Khi người dùng thao tác trên một apartment cụ thể, hệ thống kiểm tra vai trò (role) của user trong apartment đó thông qua bảng User_Apartment_Role.
+- Quyền truy cập và chức năng hiển thị trên giao diện sẽ được điều chỉnh động dựa trên role hiện tại của user trong tenant đang chọn.
+- Việc phân quyền động này giúp một user có thể là tổ trưởng ở apartment A, nhưng chỉ là cư dân ở apartment B.
+
+#### Ví dụ thực tế:
+
+- User "Nguyễn Văn A" là tổ trưởng (admin) ở chung cư Sunshine, đồng thời là cư dân (resident) ở chung cư BlueMoon.
+- Khi đăng nhập và chọn chung cư Sunshine, hệ thống cấp quyền admin cho user này.
+- Khi chuyển sang chung cư BlueMoon, hệ thống chỉ cấp quyền cư dân, các chức năng quản trị sẽ bị ẩn.
+
+### 4. Quy tắc thiết kế bảng dữ liệu
+
+- Các bảng thông tin độc lập (như Resident, Vehicle, Fee, ...) sẽ có cột ApartmentID để xác định dữ liệu thuộc tenant nào.
+- Các bảng phụ thuộc (join table) như User_Apartment, User_Apartment_Role không cần thêm ApartmentID vì đã liên kết qua các bảng cha.
+- Khi truy vấn dữ liệu, luôn lọc theo ApartmentID để đảm bảo tính tách biệt dữ liệu giữa các tenant.
+
+### 5. Các ưu điểm
+
+- **Bảo mật dữ liệu**: Mỗi tenant chỉ truy cập được dữ liệu của mình.
+- **Mở rộng linh hoạt**: Dễ dàng thêm tenant mới mà không ảnh hưởng đến các tenant khác.
+- **Phân quyền động**: Một user có thể có nhiều vai trò ở các tenant khác nhau, quyền hạn được kiểm soát linh hoạt.
+- **Quản lý tập trung**: Dễ dàng quản lý người dùng, vai trò, dữ liệu cho từng tenant trên cùng một hệ thống.
+
+---
 
 ## CÁC THUẬT TOÁN CƠ BẢN
 
@@ -153,15 +194,8 @@ Cài đặt MySQL:
      const hashedPassword = await bcrypt.hash(Password, saltRounds);
      ```
 
-### 2. So sánh mật khẩu khi đăng nhập
-   - Khi người dùng đăng nhập, hệ thống sẽ so sánh mật khẩu nhập vào với mật khẩu đã băm trong database.
 
-     ```js
-     const isMatch = await bcrypt.compare(password, user.Password);
-     if (!isMatch) return res.status(401).json({ message: "Invalid password" });
-     ```
-
-### 3. Sinh JWT Token khi đăng nhập thành công
+### 2. Sinh JWT Token khi đăng nhập thành công
    - Sau khi xác thực thành công, hệ thống sinh ra một JWT token để xác thực các request tiếp theo của người dùng.
    
      ```js
@@ -172,7 +206,7 @@ Cài đặt MySQL:
      );
      ```
 
-### 4. Kiểm tra role động phía frontend (lấy role của user trong từng apartment)
+### 3. Kiểm tra role động phía frontend (lấy role của user trong từng apartment)
    - Ứng dụng frontend gọi API để lấy vai trò hiện tại của user trong apartment đang chọn, lưu vào localStorage để điều hướng và hiển thị chức năng phù hợp.
    
      ```js
@@ -188,7 +222,7 @@ Cài đặt MySQL:
      }
      ```
 
-## THIẾT KẾ CƠ SỞ DỮ LIỆU    999 
+## THIẾT KẾ CƠ SỞ DỮ LIỆU
 
 ### 1. Sơ đồ logic để thể hiện mối quan hệ giữa các bảng trong CSDL.
 
@@ -248,7 +282,7 @@ Cài đặt MySQL:
   JWT_SECRET="Your JWT secret key"
   ```
 
-## CÁC PAYLOAD   999 
+## CÁC PAYLOAD
 
   ### Các payload JSON cho chức năng đa khách hàng:
 
@@ -291,18 +325,32 @@ Cài đặt MySQL:
 
 ## ĐẶC TẢ HÀM
 
-- Một số hàm quan trọng
-- Mô tả ý nghĩa của hàm, tham số vào, ra
-- Hoặc có thể tham chiếu, chụp ảnh từ các công cụ như swagger, pydoc, javadoc, doxygen
+- Danh sách các API trong Back-end:
 
-  ```C
-     /**
-      *  Hàm tính ...
-      *  @param  x  Tham số
-      *  @param  y  Tham số
-      */
-     void abc(int x, int y = 2);
-  ```
+   ![API User](./resource/user.png)
+   <div align="center">
+     <em>API cho User</em>
+    </div>
+
+   ![API Apartment](./resource/apartment.png)
+   <div align="center">
+     <em>API cho Apartment</em>
+    </div>
+
+   ![API Role](./resource/role.png)
+   <div align="center">
+     <em>API cho Role</em>
+    </div>
+
+   ![API UserApartment](./resource/user_apartment.png)
+   <div align="center">
+     <em>API cho UserApartment</em>
+    </div>
+
+   ![API UserApartmentRole](./resource/user_apartment_role.png)
+   <div align="center">
+     <em>API cho UserApartmentRole</em>
+    </div>
 
 
 ## PHÁT SINH
@@ -316,12 +364,6 @@ Cài đặt MySQL:
   - Chi tiết: Khi admin truy cập trang Account, một số quyền truy cập không thể xem được (không hiển thị)
   - Nguyên nhân: Trong form thêm role cho người dùng, thay vì đặt tên role là "Tổ phó", role được đặt nhầm thành "Phó tổ trưởng" dẫn đến không thể hiển thị role của người dùng
   - Giải pháp: Sửa tham số truyền vào khi chọn option "Tổ phó"
-
-- __Lỗi: __
-  - Chi tiết: 
-  - Nguyên nhân: 
-  - Giải pháp: 
-
   
 ## KẾT QUẢ
 Các ảnh chụp với caption giải thích.
