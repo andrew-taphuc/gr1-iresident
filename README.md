@@ -9,8 +9,8 @@ Kiến trúc multi - tenant đang là xu hướng của các ứng dụng SaaS h
 -	Quản lý phương tiện
 -	Quản lý thu phí
 -	Quản lý loại phí (Dành cho Tổ trưởng)
--	Quản lý thành viên BQT – Phân quyền người dùng (Dành cho Tổ trưởng)
--	Tài khoản cá nhân
+-	Quản lý người dùng – Phân quyền người dùng (Dành cho Tổ trưởng)
+-	Trang cá nhân
 
    ![Ảnh trang Home](./resource/home.png)
    <div align="center">
@@ -31,7 +31,7 @@ Kiến trúc multi - tenant đang là xu hướng của các ứng dụng SaaS h
 
 ### 1. Thành phần hệ thống
 
-#### Phía máy chủ (Backend)
+#### Back-end
 
   Back-end đóng vai trò xử lý toàn bộ logic nghiệp vụ, bảo mật và quản lý dữ liệu. Kiến trúc phân tầng tại đây bao gồm các tầng chính như:
 - Tầng Controller (Presentation Layer): Tiếp nhận yêu cầu từ client, điều 
@@ -41,20 +41,14 @@ quy tắc của hệ thống.
 - Tầng Model (Data Access Layer): Giao tiếp với cơ sở dữ liệu, đảm bảo lưu 
 trữ và truy xuất dữ liệu chính xác.
 
-#### Phía người dùng (Frontend)
-  Front-end tập trung vào giao diện người dùng, tối ưu hóa trải nghiệm người dùng (UX) với thiết kế hiện đại, mượt mà và tương thích đa nền tảng. Phần này giao tiếp
-với server thông qua các API REST.
+#### Front-end
+  Front-end tập trung vào giao diện người dùng, tối ưu hóa trải nghiệm người dùng (UX) với thiết kế đơn giản, mượt mà và tương thích đa nền tảng. Phần này giao tiếp với server thông qua các API REST.
 
 ### 2. Nền tảng hệ điều hành hỗ trợ
 
-#### Backend & Database
-
 - Windows 10/11, Linux, MacOS (chỉ cần cài đặt được Node.js và MySQL)
 
-#### Frontend 
-
-- Mọi hệ điều hành có trình duyệt hiện đại
-
+- Các trình duyệt web như Chrome, Safari, Cốc Cốc, ...
 ### 3. Sơ đồ tích hợp hệ thống
 
 <div align="center">
@@ -203,15 +197,15 @@ project_IT3180_nhom_10/
 
 ## THIẾT KẾ CƠ SỞ DỮ LIỆU    999 
 
-- Sơ đồ quan hệ thực thể để thể hiện mối quan hệ giữa các trường thông tin.
+### 1. Sơ đồ logic để thể hiện mối quan hệ giữa các bảng trong CSDL.
 
 <div align="center">
-  <img src="design/ERD.png" alt="ERD" />
+  <img src="./resource/logic.png" alt="Logic" />
   <br>
-  <em>Hình: Sơ đồ quan hệ thực thể (ERD)</em>
+  <em>Hình: Sơ đồ Logic</em>
 </div>
 
-- Giải thích các table, và một vài table.field quan trọng
+### 2. Chi tiết các bảng phục vụ kiến trúc multi - tenant
   - **Users**
     - Quản lý thông tin tài khoản người dùng, có thể thuộc nhiều tenant (căn hộ/chung cư).
     - Trường quan trọng:
@@ -251,7 +245,7 @@ project_IT3180_nhom_10/
     - Một user có thể là tổ trưởng (admin) ở apartment A, nhưng chỉ là cư dân (resident) ở apartment B.
     - Khi đăng nhập, hệ thống xác định user đang thao tác với tenant (apartment) nào, và phân quyền dựa trên User_Apartment_Role.
 
-- Cấu hình file .env
+### 3. Cấu hình file .env
   ```env
   DB_HOST="Your database host"
   DB_USER="Your database user"
@@ -268,19 +262,19 @@ project_IT3180_nhom_10/
   - **Tạo căn hộ mới (Apartment):**
     ```json
     {
-      "ApartmentName": "Chung cư A",
-      "Phone": "02812345678",
-      "Address": "123 Đường ABC, Quận 1, TP.HCM"
+      "ApartmentName": "Chung cư Sunshine",
+      "Phone": "0123456789",
+      "Address": "Số 1 Đại Cồ Việt, Bách Khoa, Hai Bà Trưng, Hà Nội"
     }
     ```
 
   - **Tạo user mới (User):**
     ```json
     {
-      "Username": "user01",
-      "Password": "matkhau123",
-      "FullName": "Nguyễn Văn B",
-      "Email": "user01@example.com",
+      "Username": "admin",
+      "Password": "123456",
+      "FullName": "Nguyễn Văn A",
+      "Email": "admin@gmail.com",
       "PhoneNumber": "0912345678"
     }
     ```
@@ -288,15 +282,15 @@ project_IT3180_nhom_10/
   - **Gán user vào một apartment (User_Apartment):**
     ```json
     {
-      "UserID": 5,
-      "ApartmentID": 2
+      "UserID": 1,
+      "ApartmentID": 1
     }
     ```
 
   - **Gán vai trò cho user ở một căn hộ (User_Apartment_Role):**  
     ```json
     {
-      "UserApartmentID": 3,
+      "UserApartmentID": 1,
       "RoleID": 1,      
       "IsActive": true
     }
