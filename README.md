@@ -12,7 +12,11 @@ Kiến trúc multi - tenant đang là xu hướng của các ứng dụng SaaS h
 -	Quản lý thành viên BQT – Phân quyền người dùng (Dành cho Tổ trưởng)
 -	Tài khoản cá nhân
 
-   ![Ảnh minh họa](https://soict.hust.edu.vn/wp-content/uploads/logo-soict-hust-1-1024x416.png)
+   ![Ảnh trang Home](./resource/home.png)
+   <div align="center">
+     <em>Hình: Sơ đồ tích hợp hệ thống</em>
+    </div>
+
 
 ## TÁC GIẢ
 
