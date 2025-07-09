@@ -4,8 +4,8 @@ Dự án triển khai kiến trúc multi - tenant vào phần mềm quản lý c
 
 ## BÁO CÁO THÀNH VIÊN
 
-- **Tạ Hồng Phúc (20225906)**: [Báo cáo chi tiết](./reports/TaHongPhuc_Report.md)
-- **Bùi Quang Hưng (20225849)**: [Báo cáo chi tiết](./reports/BuiQuangHung_Report.md)
+- **Tạ Hồng Phúc (20225906)**: [Báo cáo chi tiết](./Báo%20cáo%20GR1%20-%20Tạ%20Hồng%20Phúc.pdf)
+- **Bùi Quang Hưng (20225849)**: [Báo cáo chi tiết](./Báo%20cáo%20Nghiên%20cứu%20ĐATN1%20-%20Bùi%20Quang%20Hưng%20-%2020225849.pdf)
 
 ## GIỚI THIỆU
 
