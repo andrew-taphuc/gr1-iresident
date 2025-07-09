@@ -3,7 +3,9 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import swaggerUi from "swagger-ui-express";
 import sequelize from "./src/config/dbsetup.js";
+import swaggerSpecs from "./src/config/swagger.js";
 import { createDefaultUser } from "./src/utils/createDefaultUser.js";
 import { createDefaultRoles } from "./src/utils/createDefaultRoles.js";
 
@@ -54,9 +56,22 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan("dev"));
 
+// Swagger Documentation
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpecs, {
+    customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "iResident API Documentation",
+  })
+);
+
 // Test route
 app.get("/", (req, res) => {
-  res.json({ data: "API is running..." });
+  res.json({
+    message: "iResident API is running...",
+    documentation: "Visit /api-docs for API documentation",
+  });
 });
 
 // Routes
