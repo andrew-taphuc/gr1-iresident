@@ -308,12 +308,20 @@ project_IT3180_nhom_10/
 
 ## PHÁT SINH
 
-_Các sự cố, vẫn đề, lỗi mà không xử lý được, hoặc xử lý mất quá 4h thì nên ghi vào đây, hoặc ghi vào [issue của GitHub](https://github.com/neittien0110/ProjectSample/issues). Sẽ được tính điểm. Ví dụ__
+- __Lỗi: Cấp quyền khi tạo chung cư mới__
+  - Chi tiết: Khi tạo chung cư mới, người dùng trong phiên hiện tại không thể truy cập các chức năng dành cho tổ trưởng mặc dù trong CSDL đã có bản ghi quyền Tổ trưởng với chung cư mới.
+  - Nguyên nhân: Khi tạo chung cư mới, hệ thống đã tạo quyền truy cập cho người dùng trong CSDL nhưng chưa thêm vào localStorage, dẫn đến người dùng không truy cập được các chức năng admin
+  - Giải pháp: Thêm role "Tổ trưởng" vào localStorage sau khi thêm role Tổ trưởng vào cơ sở dữ liệu
 
-- __Lỗi: blablablabla__
-  - Chi tiêt: .....
-  - Nguyên nhân: ...
-  - Giải pháp: chưa có
+- __Lỗi: Không hiển thị role người dùng trong trang quản lý__
+  - Chi tiết: Khi admin truy cập trang Account, một số quyền truy cập không thể xem được (không hiển thị)
+  - Nguyên nhân: Trong form thêm role cho người dùng, thay vì đặt tên role là "Tổ phó", role được đặt nhầm thành "Phó tổ trưởng" dẫn đến không thể hiển thị role của người dùng
+  - Giải pháp: Sửa tham số truyền vào khi chọn option "Tổ phó"
+
+- __Lỗi: __
+  - Chi tiết: 
+  - Nguyên nhân: 
+  - Giải pháp: 
 
   
 ## KẾT QUẢ
