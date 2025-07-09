@@ -60,86 +60,79 @@ trữ và truy xuất dữ liệu chính xác.
   
 ## HƯỚNG DẪN CÀI ĐẶT VÀ CHẠY THỬ
 
-### 1. Yêu Cầu Hệ Thống
+### 1. Hướng dẫn cài đặt 
 
-- Node.js (phiên bản 18.0.0 trở lên)
-- MySQL (phiên bản 8.0 trở lên)
-- npm hoặc yarn
+- Để phần mềm chạy được, hệ điều hành cần cài đặt môi trường cho Node.js. 
+- Để cấu hình phần mềm, nên có một IDE hỗ trợ như Visual Studio Code. 
+- Cần cài đặt hệ quản trị cơ sở dữ liệu MySQL để lưu trữ dữ liệu. 
+- Sau khi cài đặt đủ các phần mềm yêu cầu có thể vào IDE cấu hình lại đường dẫn CSDL, đường dẫn API, khởi động server rồi khởi động client để truy cập giao diện người dùng.  
+- Các bước cài đặt chi tiết ở phần 4.
 
-### 2. Cài Đặt Backend
+### 2. Đối tượng, phạm vi sử dụng
 
-1. Cài đặt các dependencies
-   ```bash
-   cd back-end
-   npm install
-   ```
-2. Cấu hình môi trường
+- Đối tượng sử dụng phần mềm: các thành viên ban quản lý chung cư BlueMoon.  
+- Phạm vi sử dụng phần mềm: dành cho việc quản lý thông tin hộ gia đình, nhân khẩu, thu phí,… ở chung cư BlueMoon. 
 
-   - Tạo file `.env` trong thư mục back-end
-   - Cấu hình các biến môi trường cần thiết
+### 3. Xác định các yêu cầu cài đặt
 
-3. Khởi chạy server
-   ```bash
-   npm run dev
-   ```
+Yêu cầu phần cứng:  
+- CPU: 1.1Ghz trở lên 
+- Bộ nhớ trong (RAM): tối thiểu 2GB 
 
-### 3. Cài Đặt Frontend
+Yêu cầu phần mềm:  
+- Hệ điều hành: bất kỳ hệ điều hành nào có hỗ trợ Node.js 
+- Phiên bản Node.js: từ v17.0.0 trở lên 
 
-1. Cài đặt các dependencies
+### 4. Hướng dẫn chi tiết các bước cài đặt
 
-   ```bash
-   cd front-end
-   npm install
-   ```
+#### 4.1 Cài đặt hạ tầng
 
-2. Khởi chạy ứng dụng
-   ```bash
-   npm run dev
-   ```
+- Yêu cầu hệ thống: yêu cầu máy vật lý sử dụng hệ điều hành Windows 10 trở lên.
+- Đã cài đặt IDE Visual Studio Code của Microsoft
 
-### 4. Các Dependencies Chính
+#### 4.2 Cài đặt Node.js
 
-#### Backend
+- Truy cập https://nodejs.org/en/download và tải file cài đặt ứng với hệ điều hành đang sử dụng.
+- Mở file cài đặt trong thư mục download.
+<div align="center">
+  <img src="resource/NodeJS.png" alt="" />
+</div>
+- Mở Command Prompt và chạy dòng lệnh “npm --version ” để kiểm đã cài đặt được hay chưa. Nếu cài đặt thành công sẽ hiện ra phiên bản.
+<div align="center">
+  <img src="resource/Cmd.png" alt="" />
+</div>
 
-- Express.js
-- Sequelize (ORM)
-- MySQL2
-- JWT (JSON Web Token)
-- Bcrypt
-- CORS
-- Helmet
-- Morgan
-- Dotenv
+#### 4.3 Cài đặt Git
 
-#### Frontend
+- Truy cập liên kết: https://git-scm.com/downloads/win
+- Lựa chọn phiên bản phù hợp và tải về máy
 
-- React
-- Ant Design
-- React Router DOM
-- Axios
-- Recharts
-- React Icons
+#### 4.4 Cài đặt cơ sở dữ liệu MySQL
 
-### 5. Cấu Trúc Thư Mục
+Cài đặt MySQL:
+- Truy cập vào đường dẫn: https://dev.mysql.com/downloads/installer/
+- Tải phiên bản 2.1M dành cho Windows
 
-```
-project_IT3180_nhom_10/
-├── back-end/
-│   ├── src/
-│   ├── test/
-│   └── index.js
-└── front-end/
-    ├── src/
-    ├── public/
-    └── index.html
-```
+#### 4.5 Cài đặt dự án
 
-### 6. Xử Lý Lỗi Thường Gặp
+- Truy cập đường dẫn đến repository của project:  https://github.com/nmtun/project_IT3180_nhom_10 và clone repository về máy.
 
-- Kiểm tra phiên bản Node.js
-- Kiểm tra kết nối database
-- Kiểm tra các biến môi trường
-- Kiểm tra port đang sử dụng
+#### 4.6 Chạy thử ứng dụng
+
+##### Cài đặt Server
+
+- Mở thư mục back-end
+- Tải các dependencies bằng câu lệnh: “npm i”
+- Truy cập vào thư mục back-end/src và tạo file .env theo mẫu có sẵn (ở phần 3 của mục THIẾT KẾ CƠ SỞ DỮ LIỆU) và điền thông tin vào
+- Ngoài các thông tin về database như đã hướng dẫn ở trên, chạy file back-end/untils getAccessToken.js sau đó sao chép mã được sinh ra vào JWT_SECTET trong file .env
+
+##### Cài đặt giao diện và chạy ứng dụng
+
+- Mở thư mục front-end
+- Tải các dependencies bằng câu lệnh: “npm i”
+- Gỡ comment dòng 66 file index.js 
+- Khởi chạy back-end bằng câu lệnh “npm start”. front-end với câu lệnh “npm run dev” và thu được kết quả
+
 
 ## NGUYÊN LÝ CƠ BẢN
 
