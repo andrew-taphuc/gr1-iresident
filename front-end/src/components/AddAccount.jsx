@@ -128,10 +128,8 @@ const AddAccount = ({ open, onClose, onSubmit, initialData, mode }) => {
             >
               {mode === "add-existing" && <option value="">-- Chọn vai trò --</option>}
               <option value="Tổ trưởng">Tổ trưởng</option>
-              <option value="Phó tổ trưởng">Phó tổ trưởng</option>
-              <option value="Thư ký">Thư ký</option>
+              <option value="Tổ phó">Tổ phó</option>
               <option value="Thủ quỹ">Thủ quỹ</option>
-              <option value="Cư dân">Cư dân</option>
             </select>
           </div>
           {mode === "edit" && (
