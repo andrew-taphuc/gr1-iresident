@@ -2,8 +2,16 @@
   Dự án triển khai kiến trúc multi - tenant vào phần mềm quản lý chung cư BlueMoon
 ## GIỚI THIỆU
 
- - Mô tả lại tính năng, đề bài được yêu cầu.
- - Ảnh chụp minh họa:\
+Kiến trúc multi - tenant đang là xu hướng của các ứng dụng SaaS hiện nay. Qua ứng dụng này, ta sẽ tiến hành áp dụng kiến trúc này vào ứng dụng quản lý chung cư BlueMoon.
+Ứng dụng BlueMoon là ứng dụng hỗ trợ quản lý chung cư với các chức năng:
+-	Quản lý hộ dân cư
+-	Quản lý nhân khẩu
+-	Quản lý phương tiện
+-	Quản lý thu phí
+-	Quản lý loại phí (Dành cho Tổ trưởng)
+-	Quản lý thành viên BQT – Phân quyền người dùng (Dành cho Tổ trưởng)
+-	Tài khoản cá nhân
+
    ![Ảnh minh họa](https://soict.hust.edu.vn/wp-content/uploads/logo-soict-hust-1-1024x416.png)
 
 ## TÁC GIẢ
