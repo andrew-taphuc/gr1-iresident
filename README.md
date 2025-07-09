@@ -414,6 +414,10 @@ JWT_SECRET="Your JWT secret key"
   - Nguyên nhân: Trong form thêm role cho người dùng, thay vì đặt tên role là "Tổ phó", role được đặt nhầm thành "Phó tổ trưởng" dẫn đến không thể hiển thị role của người dùng
   - Giải pháp: Sửa tham số truyền vào khi chọn option "Tổ phó"
 
+- **Lỗi: Trùng số phòng giữa các tenant**
+  - Chi tiết: Khi chung cư A có phòng 101, chung cư B không thể thêm được phòng 101 dù là 2 chung cư riêng biệt
+  - Nguyên nhân: Trong CSDL, trường RoomNumber có giá trị unique:true, dẫn đến không thể thêm được số phòng trùng nhau dù khác ApartmentID
+  - Giải pháp: Đặt ràng buộc unique cho trường RoomNumber thành false và set cặp (RoomNumber, ApartmentID) có ràng buộc unique: true
 ## KẾT QUẢ
 
 ### Khởi tạo một tenant (chung cư) mới:
