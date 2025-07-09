@@ -97,7 +97,12 @@ Yêu cầu phần mềm:
 <div align="center">
   <img src="resource/NodeJS.png" alt="" />
 </div>
-- Mở Command Prompt và chạy dòng lệnh “npm --version ” để kiểm đã cài đặt được hay chưa. Nếu cài đặt thành công sẽ hiện ra phiên bản.
+- Mở Command Prompt và chạy dòng lệnh: 
+
+```
+  npm --version
+``` 
+để kiểm đã cài đặt được hay chưa. Nếu cài đặt thành công sẽ hiện ra phiên bản.
 <div align="center">
   <img src="resource/Cmd.png" alt="" />
 </div>
@@ -109,7 +114,6 @@ Yêu cầu phần mềm:
 
 #### 4.4 Cài đặt cơ sở dữ liệu MySQL
 
-Cài đặt MySQL:
 - Truy cập vào đường dẫn: https://dev.mysql.com/downloads/installer/
 - Tải phiên bản 2.1M dành cho Windows
 
@@ -122,16 +126,33 @@ Cài đặt MySQL:
 ##### Cài đặt Server
 
 - Mở thư mục back-end
-- Tải các dependencies bằng câu lệnh: “npm i”
+- Tải các dependencies bằng câu lệnh: 
+
+```
+  npm i
+```
 - Truy cập vào thư mục back-end/src và tạo file .env theo mẫu có sẵn (ở phần 3 của mục THIẾT KẾ CƠ SỞ DỮ LIỆU) và điền thông tin vào
 - Ngoài các thông tin về database như đã hướng dẫn ở trên, chạy file back-end/untils getAccessToken.js sau đó sao chép mã được sinh ra vào JWT_SECTET trong file .env
 
 ##### Cài đặt giao diện và chạy ứng dụng
 
 - Mở thư mục front-end
-- Tải các dependencies bằng câu lệnh: “npm i”
+- Tải các dependencies bằng câu lệnh: 
+
+```
+  npm i
+```
 - Gỡ comment dòng 66 file index.js 
-- Khởi chạy back-end bằng câu lệnh “npm start”. front-end với câu lệnh “npm run dev” và thu được kết quả
+- Khởi chạy back-end bằng câu lệnh 
+
+```
+  npm start
+```  
+- Khởi chạy front-end với câu lệnh 
+
+```
+  npm run dev
+```
 
 
 ## NGUYÊN LÝ CƠ BẢN
@@ -366,6 +387,45 @@ Kiến trúc multi-tenant cho phép một hệ thống phần mềm phục vụ 
   - Giải pháp: Sửa tham số truyền vào khi chọn option "Tổ phó"
   
 ## KẾT QUẢ
-Các ảnh chụp với caption giải thích.
-Hoặc video sản phẩm
+
+### Khởi tạo một tenant (chung cư) mới: 
+
+<div align="center">
+  <img src="resource/CreateTenant.png" alt="" />
+</div>
+
+- Admin (Tổ trưởng) điền thông tin của chung cư muốn khởi tạo: 
+
+<div align="center">
+  <img src="resource/FillInfoTenant.png" alt="" />
+</div>
+
+- Khởi tạo thành công: 
+
+<div align="center">
+  <img src="resource/SuccessCreate.png" alt="" />
+</div>
+
+### Lựa chọn chung cư muốn làm việc:
+
+- Một User có thể vừa là thủ quỹ của chung cư này, vừa là tổ phó của chung cư khác. Khi đăng nhập vào hệ thống, người dùng lựa chọn chung cư muốn làm việc.
+
+<div align="center">
+  <img src="resource/SelectApartment.png" alt="" />
+</div>
+
+### Thêm tài khoản người dùng (có sẵn trong hệ thống) vào chung cu:
+
+- Admin (Tổ trưởng) của chung cư có quyền thêm các tài khoản người dùng vào trong hệ thống chung cư đó với các nhu cầu khác nhau để đáp ứng nhu cầu quản lý.
+
+<div align="center">
+  <img src="resource/AddAccount.png" alt="" />
+</div>
+
+- Thêm tài khoản thành công
+
+<div align="center">
+  <img src="resource/Result.png" alt="" />
+</div>
+
 
